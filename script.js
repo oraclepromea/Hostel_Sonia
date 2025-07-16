@@ -349,7 +349,239 @@ function switchLanguage(lang) {
     document.documentElement.lang = lang;
 }
 
+// Testimonials Carousel functionality
+function initTestimonialsCarousel() {
+    const track = document.querySelector('.testimonials-track');
+    const indicators = document.querySelectorAll('.indicator');
+    let currentSlide = 0;
+    const totalSlides = 2; // We have 2 sets of 3 testimonials
+    let autoScrollInterval;
+
+    function updateCarousel() {
+        const translateX = currentSlide * -100;
+        track.style.transform = `translateX(${translateX}%)`;
+        
+        // Update indicators
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === currentSlide);
+        });
+    }
+
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        updateCarousel();
+    }
+
+    function goToSlide(slideIndex) {
+        currentSlide = slideIndex;
+        updateCarousel();
+    }
+
+    function startAutoScroll() {
+        autoScrollInterval = setInterval(nextSlide, 4000); // Change every 4 seconds
+    }
+
+    function stopAutoScroll() {
+        clearInterval(autoScrollInterval);
+    }
+
+    // Add click events to indicators
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+            stopAutoScroll();
+            goToSlide(index);
+            // Restart auto-scroll after 8 seconds of inactivity
+            setTimeout(startAutoScroll, 8000);
+        });
+    });
+
+    // Pause auto-scroll on hover
+    const testimonialsSection = document.querySelector('.testimonials-carousel');
+    if (testimonialsSection) {
+        testimonialsSection.addEventListener('mouseenter', stopAutoScroll);
+        testimonialsSection.addEventListener('mouseleave', startAutoScroll);
+    }
+
+    // Start auto-scrolling when page loads
+    startAutoScroll();
+}
+
+// Testimonials Carousel
+class TestimonialsCarousel {
+    constructor() {
+        this.carousel = document.querySelector('.testimonials-carousel');
+        this.track = document.querySelector('.testimonials-track');
+        this.cards = document.querySelectorAll('.testimonial-card');
+        this.indicators = document.querySelectorAll('.indicator');
+        
+        if (!this.track || !this.cards.length) return;
+        
+        this.currentSlide = 0;
+        this.totalSlides = Math.ceil(this.cards.length / this.getVisibleCards());
+        this.autoScrollInterval = null;
+        this.isHovered = false;
+        
+        this.init();
+    }
+    
+    init() {
+        this.setupCards();
+        this.updateIndicators();
+        this.bindEvents();
+        this.startAutoScroll();
+    }
+    
+    getVisibleCards() {
+        const containerWidth = this.carousel.offsetWidth;
+        if (containerWidth <= 480) return 1;
+        if (containerWidth <= 768) return 2;
+        return 3;
+    }
+    
+    setupCards() {
+        const visibleCards = this.getVisibleCards();
+        const cardWidth = 100 / visibleCards;
+        
+        this.cards.forEach(card => {
+            card.style.flex = `0 0 calc(${cardWidth}% - 20px)`;
+        });
+        
+        // Update total slides based on current viewport
+        this.totalSlides = Math.ceil(this.cards.length / visibleCards);
+        
+        // Reset to first slide if current slide is out of bounds
+        if (this.currentSlide >= this.totalSlides) {
+            this.currentSlide = 0;
+        }
+        
+        this.updateCarousel();
+    }
+    
+    updateCarousel() {
+        const visibleCards = this.getVisibleCards();
+        const translateX = -(this.currentSlide * 100);
+        this.track.style.transform = `translateX(${translateX}%)`;
+        this.updateIndicators();
+    }
+    
+    updateIndicators() {
+        // Update the number of indicators to match total slides
+        const indicatorsContainer = document.querySelector('.carousel-indicators');
+        if (!indicatorsContainer) return;
+        
+        // Clear existing indicators
+        indicatorsContainer.innerHTML = '';
+        
+        // Create indicators for each slide
+        for (let i = 0; i < this.totalSlides; i++) {
+            const indicator = document.createElement('button');
+            indicator.className = `indicator ${i === this.currentSlide ? 'active' : ''}`;
+            indicator.setAttribute('data-slide', i);
+            indicator.addEventListener('click', () => this.goToSlide(i));
+            indicatorsContainer.appendChild(indicator);
+        }
+        
+        // Update indicators reference
+        this.indicators = document.querySelectorAll('.indicator');
+    }
+    
+    goToSlide(slideIndex) {
+        this.currentSlide = slideIndex;
+        this.updateCarousel();
+        this.restartAutoScroll();
+    }
+    
+    nextSlide() {
+        this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+        this.updateCarousel();
+    }
+    
+    prevSlide() {
+        this.currentSlide = this.currentSlide === 0 ? this.totalSlides - 1 : this.currentSlide - 1;
+        this.updateCarousel();
+    }
+    
+    startAutoScroll() {
+        this.autoScrollInterval = setInterval(() => {
+            if (!this.isHovered) {
+                this.nextSlide();
+            }
+        }, 4000); // Change slide every 4 seconds
+    }
+    
+    stopAutoScroll() {
+        if (this.autoScrollInterval) {
+            clearInterval(this.autoScrollInterval);
+            this.autoScrollInterval = null;
+        }
+    }
+    
+    restartAutoScroll() {
+        this.stopAutoScroll();
+        this.startAutoScroll();
+    }
+    
+    bindEvents() {
+        // Pause on hover
+        this.carousel.addEventListener('mouseenter', () => {
+            this.isHovered = true;
+        });
+        
+        this.carousel.addEventListener('mouseleave', () => {
+            this.isHovered = false;
+        });
+        
+        // Handle window resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                this.setupCards();
+            }, 250);
+        });
+        
+        // Touch/swipe support for mobile
+        let startX = 0;
+        let endX = 0;
+        
+        this.track.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+        });
+        
+        this.track.addEventListener('touchend', (e) => {
+            endX = e.changedTouches[0].clientX;
+            const diffX = startX - endX;
+            
+            if (Math.abs(diffX) > 50) { // Minimum swipe distance
+                if (diffX > 0) {
+                    this.nextSlide();
+                } else {
+                    this.prevSlide();
+                }
+                this.restartAutoScroll();
+            }
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (document.activeElement && document.activeElement.closest('.testimonials-carousel')) {
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    this.prevSlide();
+                    this.restartAutoScroll();
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    this.nextSlide();
+                    this.restartAutoScroll();
+                }
+            }
+        });
+    }
+}
+
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', () => {
     initLanguageToggle();
+    initTestimonialsCarousel();
+    new TestimonialsCarousel();
 });
