@@ -167,6 +167,7 @@ const translations = {
         'location-view': 'Vista a las montañas',
         'location-map-title': 'Encuentra Hostal Sonia',
         'location-directions': 'Obtén direcciones precisas desde tu ubicación',
+        'coastal-caption': 'Vista costera de Copacabana',
         
         // Contact
         'contact-title': 'Contacto',
@@ -179,6 +180,7 @@ const translations = {
         'contact-languages': 'Idiomas',
         'contact-languages-text': 'Hablamos Español, English y Français',
         'contact-rating': 'Calificación',
+        'contact-reviews-count': '127+ reseñas',
         'contact-additional': 'Información Adicional',
         'contact-reception': 'Horarios de Atención',
         'contact-reception-text': 'Recepción 24h • Check-in: 13:00-18:00 • Check-out: 11:00',
@@ -186,7 +188,22 @@ const translations = {
         'contact-wifi-text': 'Internet gratuito • Desayuno incluido • Estacionamiento gratis',
         'contact-ready': '¿Listo para reservar?',
         'contact-book-text': 'Visita nuestro perfil en Hostelworld para hacer tu reserva',
-        'contact-book-link': 'Reservar en Hostelworld'
+        'contact-book-link': 'Reservar en Hostelworld',
+        
+        // Footer
+        'footer-description': 'Tu hogar en el corazón de Copacabana, Bolivia. Ubicado a pasos de la plaza principal y el lago Titicaca.',
+        'footer-rating-text': '4.2/5 en Google',
+        'footer-contact-title': 'Contacto Rápido',
+        'footer-address': 'Calle Murillo 256, Copacabana',
+        'footer-hours': 'Abierto 24/7',
+        'footer-links-title': 'Enlaces Útiles',
+        'footer-rooms': 'Nuestras Habitaciones',
+        'footer-services': 'Servicios',
+        'footer-location': 'Ubicación',
+        'footer-book': 'Reservar Ahora',
+        'footer-social-title': 'Síguenos',
+        'footer-newsletter-title': 'Recibe ofertas especiales',
+        'footer-email-placeholder': 'Tu email'
     },
     en: {
         // Navigation
@@ -290,6 +307,7 @@ const translations = {
         'location-view': 'Mountain views',
         'location-map-title': 'Find Hostal Sonia',
         'location-directions': 'Get precise directions from your location',
+        'coastal-caption': 'Copacabana coastal view',
         
         // Contact
         'contact-title': 'Contact',
@@ -302,6 +320,7 @@ const translations = {
         'contact-languages': 'Languages',
         'contact-languages-text': 'We speak Spanish, English and French',
         'contact-rating': 'Rating',
+        'contact-reviews-count': '127+ reviews',
         'contact-additional': 'Additional Information',
         'contact-reception': 'Reception Hours',
         'contact-reception-text': '24h Reception • Check-in: 1:00-6:00 PM • Check-out: 11:00 AM',
@@ -309,7 +328,22 @@ const translations = {
         'contact-wifi-text': 'Free internet • Breakfast included • Free parking',
         'contact-ready': 'Ready to book?',
         'contact-book-text': 'Visit our profile on Hostelworld to make your reservation',
-        'contact-book-link': 'Book on Hostelworld'
+        'contact-book-link': 'Book on Hostelworld',
+        
+        // Footer
+        'footer-description': 'Your home in the heart of Copacabana, Bolivia. Located steps away from the main square and Lake Titicaca.',
+        'footer-rating-text': '4.2/5 on Google',
+        'footer-contact-title': 'Quick Contact',
+        'footer-address': 'Calle Murillo 256, Copacabana',
+        'footer-hours': 'Open 24/7',
+        'footer-links-title': 'Useful Links',
+        'footer-rooms': 'Our Rooms',
+        'footer-services': 'Services',
+        'footer-location': 'Location',
+        'footer-book': 'Book Now',
+        'footer-social-title': 'Follow Us',
+        'footer-newsletter-title': 'Receive special offers',
+        'footer-email-placeholder': 'Your email'
     }
 };
 
@@ -342,6 +376,15 @@ function switchLanguage(lang) {
         const key = element.dataset.translate;
         if (translations[lang] && translations[lang][key]) {
             element.textContent = translations[lang][key];
+        }
+    });
+    
+    // Handle placeholder translations
+    const placeholderElements = document.querySelectorAll('[data-translate-placeholder]');
+    placeholderElements.forEach(element => {
+        const key = element.dataset.translatePlaceholder;
+        if (translations[lang] && translations[lang][key]) {
+            element.placeholder = translations[lang][key];
         }
     });
     
