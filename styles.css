@@ -10,12 +10,40 @@ body {
     line-height: 1.6;
     color: #333;
     overflow-x: hidden;
+    /* Performance optimization: Enable hardware acceleration */
+    transform: translateZ(0);
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
+}
+
+/* Performance optimizations for images */
+img {
+    /* Optimize image rendering */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimize-contrast;
+    /* Prevent layout shifts */
+    height: auto;
+    max-width: 100%;
+    /* Enable hardware acceleration for smooth animations */
+    transform: translateZ(0);
+    /* Improve loading performance */
+    will-change: transform;
+}
+
+/* Fade-in animation for sections */
+.fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in.active {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* Navigation */
@@ -28,6 +56,8 @@ body {
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     transition: all 0.3s ease;
+    /* Performance optimization */
+    will-change: transform;
 }
 
 .nav-container {
@@ -51,7 +81,10 @@ body {
 
 .nav-logo img {
     height: 40px;
-    width: auto;
+    width: 40px;
+    /* Performance optimization for logo */
+    object-fit: contain;
+    transform: translateZ(0);
 }
 
 .nav-menu {
@@ -143,7 +176,7 @@ body {
     transition: 0.3s;
 }
 
-/* Hero Section */
+/* Hero Section - Optimized for performance */
 .hero {
     position: relative;
     min-height: 100vh;
@@ -151,6 +184,8 @@ body {
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    /* Performance optimization */
+    will-change: transform;
 }
 
 .hero-background {
@@ -160,6 +195,8 @@ body {
     width: 100%;
     height: 100%;
     z-index: 1;
+    /* Performance optimization */
+    transform: translateZ(0);
 }
 
 .hero-background img {
@@ -167,6 +204,9 @@ body {
     height: 100%;
     object-fit: cover;
     object-position: center;
+    /* Performance optimization for hero image */
+    transform: translateZ(0);
+    will-change: transform;
 }
 
 .hero-overlay {
@@ -179,6 +219,7 @@ body {
     justify-content: center;
     text-align: center;
     color: white;
+    /* Removed the dark gradient overlay - now transparent */
 }
 
 .hero-content {
@@ -249,11 +290,13 @@ body {
     transition: all 0.3s ease;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     text-shadow: none;
+    /* Performance optimization */
+    transform: translateZ(0);
 }
 
 .cta-button:hover {
     background: #e67e22;
-    transform: translateY(-2px);
+    transform: translateY(-2px) translateZ(0);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
 }
 
@@ -299,6 +342,8 @@ body {
     height: 300px;
     object-fit: cover;
     transition: transform 0.3s ease;
+    /* Performance optimization */
+    transform: translateZ(0);
 }
 
 .gallery-thumbs {
@@ -316,13 +361,15 @@ body {
     transition: all 0.3s ease;
     opacity: 0.7;
     border: 2px solid transparent;
+    /* Performance optimization */
+    transform: translateZ(0);
 }
 
 .gallery-thumb:hover,
 .gallery-thumb.active {
     opacity: 1;
     border-color: #d35400;
-    transform: translateY(-2px);
+    transform: translateY(-2px) translateZ(0);
 }
 
 .about-text {
@@ -358,10 +405,12 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    /* Performance optimization */
+    transform: translateZ(0);
 }
 
 .feature:hover {
-    transform: translateY(-5px);
+    transform: translateY(-5px) translateZ(0);
 }
 
 .feature i {
