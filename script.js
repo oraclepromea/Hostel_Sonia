@@ -347,11 +347,14 @@ const translations = {
     }
 };
 
-let currentLanguage = 'es';
+let currentLanguage = 'en';
 
 // Language toggle functionality
 function initLanguageToggle() {
     const langButtons = document.querySelectorAll('.lang-btn');
+    
+    // Set initial language to English
+    switchLanguage('en');
     
     langButtons.forEach(btn => {
         btn.addEventListener('click', () => {
